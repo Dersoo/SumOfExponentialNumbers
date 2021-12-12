@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Authors>Mikaiel Harakian</Authors>
+    <Description>This app calculates the sum of exponential numbers with limited precision in the mantissa</Description>
+    <Copyright>Mikaiel Harakian</Copyright>
+  </PropertyGroup>
+
+</Project>

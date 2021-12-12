@@ -1,0 +1,10 @@
+M:\Out\SumOfExponentialNumbers\SumOfExponentialNumbers\SumOfExponentialNumbers\bin\Debug\netcoreapp2.2\SumOfExponentialNumbers.deps.json
+M:\Out\SumOfExponentialNumbers\SumOfExponentialNumbers\SumOfExponentialNumbers\bin\Debug\netcoreapp2.2\SumOfExponentialNumbers.runtimeconfig.json
+M:\Out\SumOfExponentialNumbers\SumOfExponentialNumbers\SumOfExponentialNumbers\bin\Debug\netcoreapp2.2\SumOfExponentialNumbers.runtimeconfig.dev.json
+M:\Out\SumOfExponentialNumbers\SumOfExponentialNumbers\SumOfExponentialNumbers\bin\Debug\netcoreapp2.2\SumOfExponentialNumbers.dll
+M:\Out\SumOfExponentialNumbers\SumOfExponentialNumbers\SumOfExponentialNumbers\bin\Debug\netcoreapp2.2\SumOfExponentialNumbers.pdb
+M:\Out\SumOfExponentialNumbers\SumOfExponentialNumbers\SumOfExponentialNumbers\obj\Debug\netcoreapp2.2\SumOfExponentialNumbers.csproj.CoreCompileInputs.cache
+M:\Out\SumOfExponentialNumbers\SumOfExponentialNumbers\SumOfExponentialNumbers\obj\Debug\netcoreapp2.2\SumOfExponentialNumbers.AssemblyInfoInputs.cache
+M:\Out\SumOfExponentialNumbers\SumOfExponentialNumbers\SumOfExponentialNumbers\obj\Debug\netcoreapp2.2\SumOfExponentialNumbers.AssemblyInfo.cs
+M:\Out\SumOfExponentialNumbers\SumOfExponentialNumbers\SumOfExponentialNumbers\obj\Debug\netcoreapp2.2\SumOfExponentialNumbers.dll
+M:\Out\SumOfExponentialNumbers\SumOfExponentialNumbers\SumOfExponentialNumbers\obj\Debug\netcoreapp2.2\SumOfExponentialNumbers.pdb
