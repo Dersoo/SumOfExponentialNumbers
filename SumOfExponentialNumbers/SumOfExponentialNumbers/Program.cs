@@ -8,23 +8,36 @@ namespace SumOfNumbersInTheExponentialForm
         static void Main(string[] args)
         {
             ExponentialCalculator exponentialCalculator1 = new ExponentialCalculator();
+            ExponentialNumber resultingExponentialNumber;
             string tempEnterValue = "";
 
-            Console.WriteLine("Please enter a row of exponential numbers. Enter '=' to complete the input of numbers.");
+            Console.WriteLine("Please, enter a row of exponential numbers. Enter '=' to complete the input.");
             while (tempEnterValue != "=")
             {
                 tempEnterValue = Console.ReadLine();
 
                 if (tempEnterValue != "=")
                 {
-                    if ((int)exponentialCalculator1.AddExponentialNumber(tempEnterValue) == 1)
+                    try
                     {
-                        Console.WriteLine("The entered number is not in exponential form. Please enter again.");
+                        exponentialCalculator1.AddExponentialNumber(tempEnterValue);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("The entered number {0}. Please, enter again.", e.Message);
                     }
                 }
             }
-            Console.WriteLine("The sum of exponentional numbers is:");
-            Console.WriteLine(exponentialCalculator1.SumExponentialNumbers().Value);
+            resultingExponentialNumber = exponentialCalculator1.SumExponentialNumbers();
+            if (resultingExponentialNumber != null)
+            {
+                Console.WriteLine("The sum of exponentional numbers is equal to:");
+                Console.WriteLine(resultingExponentialNumber.ToString());
+            }
+            else
+            {
+                Console.WriteLine("No numbers have been entered!");
+            }
         }
     }
 }

@@ -2,26 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace SumOfNumbersInTheExponentialForm
 {
-    enum ResponsesFromClass
-    {
-        IsCorrect,
-        NonExponentialFormat,
-    }
-
-
     class ExponentialCalculator
     {
         private List<ExponentialNumber> _exponentialNumberList;
-
-        //Template to checking exponential number
-        private static Regex _exponentialFormPattern = new Regex("-?[\\d.]+(?:e[+-]?\\d)+?", RegexOptions.IgnoreCase);
-
-        //Exponential number separation pattern
-        private static Regex _exponentialNumberSeparationRegex = new Regex(@"(?<numericPart>[^-]+)e(?<exponentialPart>.+)", RegexOptions.IgnoreCase);
 
         public const byte PRECISION = 39;
 
@@ -30,13 +16,15 @@ namespace SumOfNumbersInTheExponentialForm
             _exponentialNumberList = new List<ExponentialNumber>();
         }
 
-        //---------------------------[START] Utility functions-------------------------------
-        private static bool IsNumberMatchesThePattern(string exponentialNumberString)
+        public int CountOfTerms
         {
-            //Checking to see is the entered number matches with template
-            return _exponentialFormPattern.IsMatch(exponentialNumberString);
+            get
+            {
+                return _exponentialNumberList.Count();
+            }
         }
 
+        //---------------------------[START] Utility functions-------------------------------
         public static string ReducePrecisionInMantissa(string numberString, byte precision)
         {
             string exponentialPartString = "";
@@ -44,7 +32,7 @@ namespace SumOfNumbersInTheExponentialForm
             string DigitAddition(string number)
             {
                 int roundingPart = 1;
-                string roundingPartString = "";
+                string roundingPartString;
                 string newNumber = "";
 
                 for (int i = precision + 1; i != -1; i--)
@@ -102,7 +90,7 @@ namespace SumOfNumbersInTheExponentialForm
         private static string ConvertToExponentialForm(string numberString)
         {
             int i = numberString.Length - 1;
-            int countOfNumbersBeforePoint = 0;
+            int countOfNumbersBeforePoint;
 
             if (numberString.Contains("."))
             {
@@ -115,6 +103,24 @@ namespace SumOfNumbersInTheExponentialForm
             if (numberString[i] == '.')
             {
                 numberString = numberString.Replace(".", "");
+            }
+            if (numberString.Contains(".") && (char)numberString[0] == '0')
+            {
+                int exponentialPart = 0;
+                numberString = numberString.Replace(".", "");
+                for (int j = 0; j < numberString.Length;)
+                {
+                    if ((char)numberString[j] == '0')
+                    {
+                        exponentialPart--;
+                        numberString = numberString.Remove(0, 1);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                return numberString.Insert(1, ".") + "e" + exponentialPart.ToString();
             }
             if (numberString.Contains(".") && numberString.IndexOf(".") != 1)
             {
@@ -132,9 +138,7 @@ namespace SumOfNumbersInTheExponentialForm
             }
             else if (!numberString.Contains(".") && numberString.Length > 1)
             {
-                int exponential = 0;
-
-                exponential = numberString.Length - 1;
+                int exponential = numberString.Length - 1;
                 numberString = numberString.Insert(1, ".");
                 i = numberString.Length - 1;
                 while (numberString[i] == '0')
@@ -144,7 +148,7 @@ namespace SumOfNumbersInTheExponentialForm
                 }
                 numberString = numberString + "e" + exponential.ToString();
             }
-            else if (numberString.Length == 1)
+            else if (numberString.Length == 1 || numberString.IndexOf(".") == 1)
             {
                 return numberString + "e0";
             }
@@ -160,84 +164,37 @@ namespace SumOfNumbersInTheExponentialForm
 
         public ExponentialNumber SumExponentialNumbers()
         {
-            ExponentialNumber exponentialNumbersSum = new ExponentialNumber();
-            ExponentialNumber exponentialNumbersSumTemp = new ExponentialNumber();
-
-            for (int i = 0; i < _exponentialNumberList.Count(); i += 2)
+            if (this._exponentialNumberList.Count == 0)
             {
-                if ((i + 1) > (_exponentialNumberList.Count() - 1))
+                return null;
+            }
+            ExponentialNumber exponentialNumbersSum = _exponentialNumberList[0];
+            if (_exponentialNumberList.Count() > 1)
+            {
+                for (int i = 1; i < _exponentialNumberList.Count(); i++)
                 {
-                    exponentialNumbersSum.Value = _exponentialNumberList[i] + exponentialNumbersSum;
-                }
-                else
-                {
-                    exponentialNumbersSumTemp.Value = (_exponentialNumberList[i] + _exponentialNumberList[i + 1]);
-                    exponentialNumbersSum.Value = exponentialNumbersSumTemp + exponentialNumbersSum;
+                    exponentialNumbersSum = exponentialNumbersSum + _exponentialNumberList[i];
                 }
             }
             exponentialNumbersSum.Value = ReducePrecisionInMantissa(
-                                            ConvertToExponentialForm(exponentialNumbersSum.Value),
-                                            PRECISION
+                                             ConvertToExponentialForm(exponentialNumbersSum.Value),
+                                             PRECISION
                                           );
 
             return exponentialNumbersSum;
         }
-        public ResponsesFromClass AddExponentialNumber(string exponentialNumberString)
+
+        public void AddExponentialNumber(string exponentialNumberString)
         {
-            string numericPart = "";
-            int exponentialPart = 0;
-
-            if (exponentialNumberString.Contains("+"))
+            try
             {
-                exponentialNumberString.Replace("+", "");
+                ExponentialNumber newExponentialNumber = ExponentialNumber.CheckAndCreateANewNumber(exponentialNumberString);
+                _exponentialNumberList.Add(newExponentialNumber);
             }
-            //Checking to see is the entered number matches with template
-            if (IsNumberMatchesThePattern(exponentialNumberString))
+            catch (ApplicationException)
             {
-                exponentialNumberString = ReducePrecisionInMantissa(exponentialNumberString, PRECISION);
-                Match exponentialMatch = _exponentialNumberSeparationRegex.Match(exponentialNumberString);
-                if (exponentialMatch.Success)
-                {
-                    numericPart = exponentialMatch.Groups["numericPart"].Value;
-                    exponentialPart = Int32.Parse(exponentialMatch.Groups["exponentialPart"].Value);
-                }
-                if (exponentialPart == 0)
-                {
-                    _exponentialNumberList.Add(
-                        new ExponentialNumber(numericPart)
-                    );
-                }
-                else
-                {
-                    int countOfNumbersAfterPoint = 0;
-                    countOfNumbersAfterPoint = (numericPart.Length - numericPart.IndexOf(".")) - 1;
-                    numericPart = numericPart.Replace(".", "");
-                    if (exponentialPart > 0)
-                    {
-                        for (int i = 0; i < (exponentialPart - countOfNumbersAfterPoint); i++)
-                        {
-                            numericPart += "0";
-                        }
-                    }
-                    else if (0 > exponentialPart)
-                    {
-                        for (int i = 0; i < (Math.Abs(exponentialPart) - 1); i++)
-                        {
-                            numericPart = "0" + numericPart;
-                        }
-                        numericPart = "0." + numericPart;
-                    }
-                    _exponentialNumberList.Add(
-                        new ExponentialNumber(numericPart)
-                    );
-                }
+                throw;
             }
-            else
-            {
-                return ResponsesFromClass.NonExponentialFormat;
-            }
-
-            return ResponsesFromClass.IsCorrect;
         }
     }
 }
